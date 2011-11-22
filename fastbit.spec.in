@@ -1,0 +1,113 @@
+Name: fastbit
+Version: @PACKAGE_VERSION@
+Release: 1
+Summary: An Efficient Compressed Bitmap Index Technology
+License: LGPL v2.1 or later
+Group: Development/Databases
+Url: https://sdm.lbl.gov/fastbit/
+Packager:  @USERNAME@ <@USERMAIL@>
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}
+
+# https://codeforge.lbl.gov/anonscm/fastbit/trunk
+Source: %name-%version.tar.gz
+
+BuildRequires: flex gcc-c++ doxygen graphviz
+BuildRequires: sharutils
+Conflicts: libfastbit-compression
+
+%description
+FastBit is an open-source data processing library following the spirit
+of NoSQL movement. It offers a set of searching functions supported by
+compressed bitmap indexes. It treats user data in the column-oriented
+fashion similar to well-known database management systems such as Sybase
+IQ, MonetDB, and Vertica. It is designed to accelerate user's data
+selection tasks without imposing undue requirements. In particular, the
+user data is NOT required to be under the control of FastBit software.
+
+%package -n lib%name
+Summary: Shared libraries of FastBit
+Group: System/Libraries
+Provides: fastbit-liberouter
+Conflicts: libfastbit-compression
+
+%description -n lib%name
+FastBit is an open-source data processing library following the spirit
+of NoSQL movement. It offers a set of searching functions supported by
+compressed bitmap indexes. It treats user data in the column-oriented
+fashion similar to well-known database management systems such as Sybase
+IQ, MonetDB, and Vertica. It is designed to accelerate user's data
+selection tasks without imposing undue requirements. In particular, the
+user data is NOT required to be under the control of FastBit software.
+
+This package contains shared libraries of FastBit.
+
+%package -n lib%name-devel
+Summary: Development files of FastBit
+Group: Development/C++
+Requires: lib%name = %version-%release
+Provides: fastbit-liberouter-devel
+Conflicts: libfastbit-compression-devel
+
+%description -n lib%name-devel
+FastBit is an open-source data processing library following the spirit
+of NoSQL movement. It offers a set of searching functions supported by
+compressed bitmap indexes. It treats user data in the column-oriented
+fashion similar to well-known database management systems such as Sybase
+IQ, MonetDB, and Vertica. It is designed to accelerate user's data
+selection tasks without imposing undue requirements. In particular, the
+user data is NOT required to be under the control of FastBit software.
+
+This package contains development files of FastBit.
+
+%package examples
+Summary: Examples for FastBit
+Group: Development/Databases
+Requires: lib%name = %version-%release
+Conflicts: ibutils
+
+%description examples
+FastBit is an open-source data processing library following the spirit
+of NoSQL movement. It offers a set of searching functions supported by
+compressed bitmap indexes. It treats user data in the column-oriented
+fashion similar to well-known database management systems such as Sybase
+IQ, MonetDB, and Vertica. It is designed to accelerate user's data
+selection tasks without imposing undue requirements. In particular, the
+user data is NOT required to be under the control of FastBit software.
+
+This package contains examples for FastBit.
+
+
+%prep
+%setup
+
+%build
+autoreconf
+%configure \
+	--enable-static=no \
+	--disable-debug
+gmake -j 8 all
+make docs
+
+%install
+make DESTDIR=$RPM_BUILD_ROOT install
+
+# delete files that should not be in the package
+rm -f $RPM_BUILD_ROOT%_libdir/*.la
+
+# Introduce the library to the system
+%post -p /sbin/ldconfig
+%postun -p /sbin/ldconfig
+
+
+%files examples
+#%doc examples/*.c* examples/Makefile examples/README
+%_bindir/*
+
+%files -n lib%name
+#%doc AUTHORS COPYING ChangeLog NEWS README
+%_libdir/*.so*
+
+%files -n lib%name-devel
+%_includedir/*
+%doc %_docdir/%name/*
+%_libdir/pkgconfig/*
