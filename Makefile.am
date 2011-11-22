@@ -2,15 +2,25 @@ AUTOMAKE_OPTIONS=gnu
 ACLOCAL_AMFLAGS=-I tests/m4
 SUBDIRS = src examples java tests contrib
 bin_SCRIPTS = tests/scripts/fastbit-config
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = fastbit.pc
+
+# Local change
+RPMDIR = RPMBUILD
+
 EXTRA_DIST = runconfig win/README win/Win.mak win/MinGW.mak win/ardea.vcproj \
 	win/ibis.sln win/ibis.vcproj win/thula.vcproj win/tcapi.vcproj \
 	win/trydll.cpp win/dll.vcproj win/trydll.vcproj win/java.vcproj \
 	win/FlexLexer.h contrib/README contrib/fbmerge/fbmerge.cpp \
 	contrib/fbmerge/Makefile.am contrib/fbmerge/Makefile.in \
-	contrib/fbmerge/fbmerge.sln contrib/fbmerge/fbmerge.vcproj
+	contrib/fbmerge/fbmerge.sln contrib/fbmerge/fbmerge.vcproj \
+	fastbit.spec.in
 
-dist_doc_DATA = doc/dataDistributions.html \
-	doc/index.html doc/quickstart.html doc/dataLoading.html \
+docdir = ${datadir}/doc/${PACKAGE}
+
+dist_doc_DATA = doc/dataDistributions.html doc/header.html doc/contact.html \
+	doc/index.html doc/quickstart.html doc/dataLoading.html doc/rara.html \
 	doc/ibisCommandLine.html doc/indexSpec.html doc/footer.html
 
 docs:
@@ -41,5 +51,13 @@ maintainer-clean: maintainer-clean-am
 
 #dist-hook:
 #	-rm -rf `find $(distdir) \( -name CVS -o \name .svn \)`
+
+# Local change
+.PHONY: rpm
+rpm: dist $(PACKAGE).spec
+	@mkdir -p $(RPMDIR)/BUILD $(RPMDIR)/RPMS $(RPMDIR)/SOURCES $(RPMDIR)/SPECS $(RPMDIR)/SRPMS;
+	mv $(distdir).tar.gz $(RPMDIR)/SOURCES/
+	$(RPMBUILD) -ba $(PACKAGE).spec \
+		--define "_topdir `pwd`/$(RPMDIR)";
 
 .PHONY: docs more-check full-check
