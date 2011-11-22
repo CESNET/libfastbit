@@ -915,6 +915,19 @@ AC_MSG_RESULT(${contrib})
 AM_CONDITIONAL(BUILD_CONTRIB, test "$contrib" = "yes")
 AC_SUBST(BUILD_CONTRIB)
 
+# Check for rpmbuil
+AC_CHECK_PROG(RPMBUILD, rpmbuild, rpmbuild)
+
+AC_SUBST(RPMBUILD)
+if test -z "$RPMBUILD"; then
+	AC_MSG_WARN([Due to missing rpmbuild you will not able to generate RPM package.])
+fi
+
+USERNAME=`git config --get user.name`
+USERMAIL=`git config --get user.email`
+AC_SUBST(USERNAME)
+AC_SUBST(USERMAIL)
+
 AC_DEFINE_UNQUOTED(FASTBIT_IBIS_INT_VERSION,
  `echo $PACKAGE_VERSION | awk 'BEGIN { FS="." } { printf("0x%d%.2d%.2d%.2d\n", substr($1, 5), $2, $3, $4); }'`,
 [Define an integer version of FastBit IBIS version number])
@@ -934,6 +947,8 @@ AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile tests/Makefile
 	         java/Makefile contrib/Makefile contrib/fbmerge/Makefile])
 AC_CONFIG_FILES([tests/scripts/fastbit-config],
 		[chmod a+x tests/scripts/fastbit-config])
+AC_CONFIG_FILES([fastbit.spec fastbit.pc])
+
 AC_CONFIG_COMMANDS([FastBit-prefix],
 [rm -f src/stamp-h1;
 mv src/fastbit-config.h src/stamp-h1;
