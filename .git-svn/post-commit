@@ -1,0 +1,23 @@
+#!/bin/sh
+#
+# A hook script to pack any information about svn in .git.
+# This hook is invoked by 'git-commit'. It takes no parameter, 
+# and is invoked after a commit is made.
+
+# save the files that concern svn to repository
+mkdir -p ./.git-svn/logs/refs/remotes/origin/
+#mkdir -p ./.git-svn/refs/remotes/origin/
+cp ./.git/logs/refs/remotes/origin/trunk ./.git-svn/logs/refs/remotes/origin/trunk
+#cp ./.git/refs/remotes/origin/trunk ./.git-svn/refs/remotes/origin/trunk
+cp -r ./.git/svn ./.git-svn/
+
+# save the svn part of config file
+git config --local --get-regexp svn-remote > ./.git-svn/svn-config
+ 
+# commit the svn config files
+git add ./.git-svn
+
+# commit only when the add makes any changes
+if git status | grep -E "(new file:|modified:|deleted:) +.git-svn/" > /dev/null ; then
+    git commit --amend -C HEAD
+fi

@@ -1,0 +1,2 @@
+svn-remote.svn.url https://code.lbl.gov/svn/fastbit
+svn-remote.svn.fetch trunk:refs/remotes/origin/trunk
