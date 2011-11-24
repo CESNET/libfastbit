@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# An example hook script that is called after a successful
+# merge is made.
+
+# restore svn configuration files
+mkdir -p ./.git/logs/refs/remotes/origin/
+#mkdir -p ./.git/refs/remotes/origin/
+cp  ./.git-svn/logs/refs/remotes/origin/trunk ./.git/logs/refs/remotes/origin/trunk
+#cp  ./.git-svn/refs/remotes/origin/trunk ./.git/refs/remotes/origin/trunk
+cp -r ./.git-svn/svn ./.git/
+
+# remove old svn configuration in config file
+git config --remove-section svn-remote.svn 2> /dev/null
+
+# restore svn configuration in config file
+while read line; do
+   git config --local $line
+done < ./.git-svn/svn-config
+
+exit 0
