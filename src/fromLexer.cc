@@ -223,7 +223,7 @@ struct yy_buffer_state
 
 	/* Whether this is an "interactive" input source; if so, and
 	 * if we're using stdio for input, then we want to use getc()
-	 * instead of fread(), to make sure we stop fetching input after
+	 * instead of fileRead(), to make sure we stop fetching input after
 	 * each newline.
 	 */
 	int yy_is_interactive;

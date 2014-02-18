@@ -246,7 +246,7 @@ const ibis::RIDSet* ibis::bundle::readRIDs(const char* dir,
         offset = sizeof(ibis::rid_t) * starts[i];
         if (offset != static_cast<uint32_t>(UnixSeek(fdes, offset, SEEK_SET))) {
             LOGGER(ibis::gVerbose > 0)
-                << "Warning -- bundle::readRIDs -- failed to fseek to "
+                << "Warning -- bundle::readRIDs -- failed to fileSeek to "
                 << offset << " in file " << fn;
             delete res;
             return 0;
@@ -1042,7 +1042,7 @@ void ibis::bundle1::write(const ibis::query& theQ) const {
     char* fn = new char[len+16];
     strcpy(fn, theQ.dir());
     strcat(fn, "bundles");
-    FILE* fptr = fopen(fn, "wb");
+    FILE* fptr = fileOpen(fn, "wb");
     if (fptr == 0) {
         LOGGER(ibis::gVerbose > 0)
             << "Warning -- bundle1::write failed to open file \""
@@ -1051,8 +1051,8 @@ void ibis::bundle1::write(const ibis::query& theQ) const {
         return;
     }
 
-    IBIS_BLOCK_GUARD(fclose, fptr);
-    int ierr = fwrite(&tmp, sizeof(uint32_t), 1, fptr);
+    IBIS_BLOCK_GUARD(fileClose, fptr);
+    int ierr = fileWrite(&tmp, sizeof(uint32_t), 1, fptr);
     if (ierr != 1) {
         LOGGER(ibis::gVerbose > 0)
             << "Warning -- bundle1::write failed to the number of rows to "
@@ -1061,15 +1061,15 @@ void ibis::bundle1::write(const ibis::query& theQ) const {
     }
 
     tmp = 1;
-    ierr = fwrite(&tmp, sizeof(uint32_t), 1, fptr);
+    ierr = fileWrite(&tmp, sizeof(uint32_t), 1, fptr);
     tmp = col->elementSize();
-    ierr = fwrite(&tmp, sizeof(uint32_t), 1, fptr);
+    ierr = fileWrite(&tmp, sizeof(uint32_t), 1, fptr);
     ierr = col->write(fptr);
-    ierr = fwrite(starts->begin(), sizeof(uint32_t), starts->size(), fptr);
+    ierr = fileWrite(starts->begin(), sizeof(uint32_t), starts->size(), fptr);
 #if defined(FASTBIT_SYNC_WRITE)
     (void)fflush(fptr);
 #endif
-    //ierr = fclose(fptr);
+    //ierr = fileClose(fptr);
     delete [] fn;
     infile = true;
 } // ibis::bundle1::write
@@ -2458,7 +2458,7 @@ void ibis::bundles::write(const ibis::query& theQ) const {
     char* fn = new char[len+16];
     strcpy(fn, theQ.dir());
     strcat(fn, "bundles");
-    FILE* fptr = fopen(fn, "wb");
+    FILE* fptr = fileOpen(fn, "wb");
     if (fptr == 0) {
         LOGGER(ibis::gVerbose > 0)
             << "Warning -- bundles::write failed to open file \""
@@ -2468,8 +2468,8 @@ void ibis::bundles::write(const ibis::query& theQ) const {
     }
 
     uint32_t i1, ncol = cols.size(), tmp = cols[0]->size();
-    int32_t ierr = fwrite(&tmp, sizeof(uint32_t), 1, fptr);
-    ierr += fwrite(&ncol, sizeof(uint32_t), 1, fptr);
+    int32_t ierr = fileWrite(&tmp, sizeof(uint32_t), 1, fptr);
+    ierr += fileWrite(&ncol, sizeof(uint32_t), 1, fptr);
     if (ierr < 2) {
         LOGGER(ibis::gVerbose > 0)
             << "Warning -- bundles::write failed to write number of rows "
@@ -2478,7 +2478,7 @@ void ibis::bundles::write(const ibis::query& theQ) const {
     }
     for (i1 = 0; i1 < ncol; ++ i1) { // element sizes
         tmp = cols[i1]->elementSize(); // ibis::colValue::elementSize
-        ierr = fwrite(&tmp, sizeof(uint32_t), 1, fptr);
+        ierr = fileWrite(&tmp, sizeof(uint32_t), 1, fptr);
         LOGGER(cols[i1]->size() != cols[0]->size() && ibis::gVerbose >= 0)
             << "Warning -- invalid ibis::bundle object (cols[i1]->size("
             << cols[i1]->size() << ") != cols[0]->size("
@@ -2490,12 +2490,12 @@ void ibis::bundles::write(const ibis::query& theQ) const {
     }
 
     // the starting positions
-    ierr = fwrite(starts->begin(), sizeof(uint32_t), starts->size(),
+    ierr = fileWrite(starts->begin(), sizeof(uint32_t), starts->size(),
                   fptr);
 #if defined(FASTBIT_SYNC_WRITE)
     (void) fflush(fptr);
 #endif
-    (void) fclose(fptr);
+    (void) fileClose(fptr);
     delete [] fn;
     infile = true;
 } // ibis::bundles::write

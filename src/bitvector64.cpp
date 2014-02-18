@@ -1352,7 +1352,7 @@ void ibis::bitvector64::read(const char * fn) {
 
 // // write bitvector64 to file (contents of vector is not changed)
 void ibis::bitvector64::write(const char * fn) const {
-    FILE *out = fopen(fn, "wb");
+    FILE *out = fileOpen(fn, "wb");
     if (out == 0) {
         ibis::util::logMessage
             ("Error", "bitvector64::write() Failed to "
@@ -1373,37 +1373,37 @@ void ibis::bitvector64::write(const char * fn) const {
     }
 #endif
     word_t n = m_vec.size();
-    word_t j = fwrite((const void*)m_vec.begin(), sizeof(word_t),
+    word_t j = fileWrite((const void*)m_vec.begin(), sizeof(word_t),
                       n, out);
     if (j != n) {
         ibis::util::logMessage("Error", "bitvector64::write() only "
                                "wrote %lu out of %lu words to %s",
                                static_cast<long unsigned>(j),
                                static_cast<long unsigned>(n), fn);
-        fclose(out);
+        fileClose(out);
         throw "bitvector64::write failed to write all bytes";
     }
     if (active.nbits > 0) {
-        fwrite((const void*)&(active.val), sizeof(word_t), 1, out);
+        fileWrite((const void*)&(active.val), sizeof(word_t), 1, out);
     }
-    fwrite((const void*)&(active.nbits), sizeof(word_t), 1, out);
+    fileWrite((const void*)&(active.nbits), sizeof(word_t), 1, out);
 
-    //     if (0 == fwrite((const void*)&nset, sizeof(word_t), 1, out)) {
+    //     if (0 == fileWrite((const void*)&nset, sizeof(word_t), 1, out)) {
     //  ibis::util::logMessage("Error", "bitvector64::write() fail to "
     //                         "write nset to %s", fn);
-    //  fclose(out);
+    //  fileClose(out);
     //  throw "bitvector64::write failed to write the size";
     //     }
 
-    //     if (0 == fwrite((const void*)&nbits, sizeof(word_t), 1, out)) {
+    //     if (0 == fileWrite((const void*)&nbits, sizeof(word_t), 1, out)) {
     //  ibis::util::logMessage("Error", "bitvector64::write() fail to "
     //                         "write nbits to %s", fn);
-    //  fclose(out);
+    //  fileClose(out);
     //  throw "bitvector64::write failed to write the cnt";
     //     }
 
-    fclose(out);
-} // ibis::bitvector64::write
+    fileClose(out);
+} // ibis::bitvector64::write(const char * fn) const
 
 void ibis::bitvector64::write(FILE* out) const {
     if (out == 0) return;
@@ -1418,7 +1418,7 @@ void ibis::bitvector64::write(FILE* out) const {
     }
 #endif
     word_t n = m_vec.size();
-    word_t j = fwrite((const void*)m_vec.begin(), sizeof(word_t),
+    word_t j = fileWrite((const void*)m_vec.begin(), sizeof(word_t),
                       n, out);
     if (j != n) {
         ibis::util::logMessage("Error", "bitvector64::write() only "
@@ -1428,12 +1428,12 @@ void ibis::bitvector64::write(FILE* out) const {
         throw "bitvector64::write failed to write all bytes";
     }
     if (active.nbits > 0) {
-        fwrite((const void*)&(active.val), sizeof(word_t), 1, out);
+        fileWrite((const void*)&(active.val), sizeof(word_t), 1, out);
     }
-    fwrite((const void*)&(active.nbits), sizeof(word_t), 1, out);
-    //     fwrite((const void*)&nset, sizeof(word_t), 1, out);
-    //     fwrite((const void*)&nbits, sizeof(word_t), 1, out);
-} // ibis::bitvector64::write
+    fileWrite((const void*)&(active.nbits), sizeof(word_t), 1, out);
+    //     fileWrite((const void*)&nset, sizeof(word_t), 1, out);
+    //     fileWrite((const void*)&nbits, sizeof(word_t), 1, out);
+} // ibis::bitvector64::write(FILE* out) const
 
 void ibis::bitvector64::write(array_t<ibis::bitvector64::word_t>& arr) const {
     arr.reserve(m_vec.size()+1+(active.nbits>0));
@@ -1587,7 +1587,7 @@ void ibis::bitvector64::and_c2(const ibis::bitvector64& rhs,
 #if DEBUG+0 > 1 || _DEBUG+0 > 1
     LOGGER(ibis::gVerbose >= 0) << "result of AND " << res;
 #endif
-} // ibis::bitvector64::and_c2
+} // bitvector64& ibis::bitvector64::and_c2
 
 // and operation where rhs is not compressed (not one word is a counter)
 void ibis::bitvector64::and_c1(const ibis::bitvector64& rhs,

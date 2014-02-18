@@ -1933,7 +1933,7 @@ void ibis::util::logMessage(const char* event, const char* fmt, ...) {
 /// - -2: unable to write to the specified file.
 ///
 /// @note The incoming argument is generally interpreted as a file name and
-/// passed to fopen, however, there are three special values: a blank
+/// passed to fileOpen, however, there are three special values: a blank
 /// string (or a nil pointer), "stdout" and "stderr."  The blank string (or
 /// a null pointer) resets the log file to the default value
 /// FASTBIT_DEFAULT_LOG.  The default value of FASTBIT_DEFAULT_LOG is
@@ -1968,7 +1968,7 @@ int ibis::util::setLogFileName(const char* filename) {
     if (ibis_util_logfilename.compare(filename) == 0)
         return 0;
 
-    FILE* fptr = fopen(filename, "a");
+    FILE* fptr = fileOpen(filename, "a");
     if (fptr != 0) {
         return writeLogFileHeader(fptr, filename);
     }
@@ -2030,7 +2030,7 @@ int ibis::util::writeLogFileHeader(FILE *fptr, const char *fname) {
             ibis_util_logfilepointer != fptr &&
             ibis_util_logfilepointer != stdout &&
             ibis_util_logfilepointer != stderr) // close existing file
-            (void) fclose(ibis_util_logfilepointer);
+            (void) fileClose(ibis_util_logfilepointer);
 
         // set the global variables ibis_util_logfilepointer
         // and ibis_util_logfilename
@@ -2116,7 +2116,7 @@ void ibis::util::closeLogFile() {
     if (ibis_util_logfilepointer != 0 &&
         ibis_util_logfilepointer != stdout &&
         ibis_util_logfilepointer != stderr) {
-        (void) fclose(ibis_util_logfilepointer);
+        (void) fileClose(ibis_util_logfilepointer);
         ibis_util_logfilepointer = 0;
     }
 } // ibis::util::closeLogFile
@@ -2160,8 +2160,8 @@ ibis::util::logger::~logger() {
         // The lock is still necessary because other logging functions use
         // multiple fprintf statements.
         ibis::util::ioLock lock;
-        (void) fwrite(mystr.c_str(), mystr.size(), 1U, fptr);
-        (void) fwrite("\n", 1U, 1U, fptr);
+        (void) fileWrite(mystr.c_str(), mystr.size(), 1U, fptr);
+        (void) fileWrite("\n", 1U, 1U, fptr);
 #if defined(_DEBUG) || defined(DEBUG) || defined(FASTBIT_SYNC_WRITE)
         (void) fflush(fptr);
 #endif

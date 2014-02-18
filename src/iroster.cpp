@@ -180,10 +180,10 @@ int ibis::roster::writeSorted(const char *df) const {
     else {
         evt = "roster::writeSorted";
     }
-    FILE *fptr = fopen(fnm.c_str(), "wb");
+    FILE *fptr = fileOpen(fnm.c_str(), "wb");
     if (fptr == 0) {
         LOGGER(ibis::gVerbose > 0)
-            << "Warning -- roster::writeSorted failed to fopen " << fnm
+            << "Warning -- roster::writeSorted failed to fileOpen " << fnm
             << " for writing";
         return -3;
     }
@@ -196,18 +196,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(unsigned char), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(unsigned char), 1, fptr);
             }
         }
         else {
             unsigned char tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(tmp), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(tmp), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(tmp), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(tmp), 1, fptr);
                         LOGGER(ierr < sizeof(tmp) && ibis::gVerbose >= 0)
                             << "Warning -- " << evt
                             << " failed to write value # " << i << " (" << tmp
@@ -229,18 +229,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(char), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(char), 1, fptr);
             }
         }
         else {
             char tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(tmp), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(tmp), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(tmp), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(tmp), 1, fptr);
                         LOGGER (ierr < sizeof(tmp) && ibis::gVerbose >= 0)
                             << "Warning -- " << evt
                             << " failed to write value # " << i << " (" << tmp
@@ -262,18 +262,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(uint16_t), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(uint16_t), 1, fptr);
             }
         }
         else {
             uint16_t tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(tmp), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(tmp), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(tmp), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(tmp), 1, fptr);
                         LOGGER(ierr < sizeof(tmp) && ibis::gVerbose >= 0)
                             << "Warning -- " << evt
                             << " failed to write value # " << i << " (" << tmp
@@ -295,18 +295,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(int16_t), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(int16_t), 1, fptr);
             }
         }
         else {
             int16_t tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(tmp), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(tmp), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(tmp), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(tmp), 1, fptr);
                         LOGGER (ierr < sizeof(tmp) && ibis::gVerbose >= 0)
                             << "Warning -- " << evt
                             << " failed to write value # " << i << " (" << tmp
@@ -328,18 +328,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(uint32_t), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(uint32_t), 1, fptr);
             }
         }
         else {
             uint32_t tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(tmp), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(tmp), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(tmp), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(tmp), 1, fptr);
                         LOGGER(ierr < sizeof(tmp) && ibis::gVerbose >= 0)
                             << "Warning -- " << evt
                             << " failed to write value # " << i << " (" << tmp
@@ -361,18 +361,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(int32_t), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(int32_t), 1, fptr);
             }
         }
         else {
             int32_t tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(tmp), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(tmp), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(tmp), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(tmp), 1, fptr);
                         LOGGER (ierr < sizeof(tmp) && ibis::gVerbose >= 0)
                             << "Warning -- " << evt
                             << " failed to write value # " << i << " (" << tmp
@@ -394,18 +394,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(uint64_t), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(uint64_t), 1, fptr);
             }
         }
         else {
             uint64_t tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(tmp), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(tmp), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(tmp), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(tmp), 1, fptr);
                         LOGGER(ierr < sizeof(tmp) && ibis::gVerbose >= 0)
                             << "Warning -- " << evt
                             << " failed to write value # " << i << " (" << tmp
@@ -427,18 +427,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(int64_t), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(int64_t), 1, fptr);
             }
         }
         else {
             int64_t tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(tmp), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(tmp)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(tmp), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(tmp), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(tmp), 1, fptr);
                         LOGGER (ierr < sizeof(tmp) && ibis::gVerbose >= 0)
                             << "Warning -- " << evt
                             << " failed to write value # " << i << " (" << tmp
@@ -460,18 +460,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(float), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(float), 1, fptr);
             }
         }
         else {
             float tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(float)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(float), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(float)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(float), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(float), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(float), 1, fptr);
                         LOGGER(ierr < sizeof(float) && ibis::gVerbose > 0)
                             << "Warning -- " << evt
                             << "failed to write value # " << i
@@ -493,18 +493,18 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = ibis::fileManager::instance().getFile(fnm.c_str(), arr);
         if (ierr == 0) {
             for (uint32_t i = 0; i < ind.size(); ++ i) {
-                fwrite(&(arr[ind[i]]), sizeof(double), 1, fptr);
+                fileWrite(&(arr[ind[i]]), sizeof(double), 1, fptr);
             }
         }
         else {
             double tmp;
-            FILE *fpts = fopen(fnm.c_str(), "rb");
+            FILE *fpts = fileOpen(fnm.c_str(), "rb");
             if (fpts != 0) {
                 for (uint32_t i = 0; i < ind.size(); ++ i) {
-                    ierr = fseek(fpts, sizeof(double)*ind[i], SEEK_SET);
-                    ierr = fread(&tmp, sizeof(double), 1, fpts);
+                    ierr = fileSeek(fpts, sizeof(double)*ind[i], SEEK_SET);
+                    ierr = fileRead(&tmp, sizeof(double), 1, fpts);
                     if (ierr > 0) {
-                        ierr = fwrite(&tmp, sizeof(double), 1, fptr);
+                        ierr = fileWrite(&tmp, sizeof(double), 1, fptr);
                         LOGGER(ierr < sizeof(double) && ibis::gVerbose > 0)
                             << "Warning -- " << evt
                             << "failed to write value # " << i << " ("
@@ -529,7 +529,7 @@ int ibis::roster::writeSorted(const char *df) const {
         ierr = 0;
         break;}
     } // switch (col->type())
-    fclose(fptr); // close the .srt file
+    fileClose(fptr); // close the .srt file
 
     if (ierr == 0) {
         return 0;
@@ -545,7 +545,7 @@ int ibis::roster::writeSorted(const char *df) const {
 /// Write the content of ind to a file already open.
 int ibis::roster::write(FILE* fptr) const {
     if (ind.empty()) return -1;
-    uint32_t ierr = fwrite(reinterpret_cast<const void*>(ind.begin()),
+    uint32_t ierr = fileWrite(reinterpret_cast<const void*>(ind.begin()),
                            sizeof(uint32_t), ind.size(), fptr);
     if (ierr != ind.size()) {
         LOGGER(ibis::gVerbose > 0)

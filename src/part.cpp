@@ -1166,10 +1166,10 @@ char* ibis::part::readMetaTags(const char* const dir) {
         return m_tags;
     }
 
-    FILE* file = fopen(buf, "r");
+    FILE* file = fileOpen(buf, "r");
     if (file == 0) {
         strcpy(buf+(ierr-9), "table.tdc"); // old metadata file name
-        file = fopen(buf, "r");
+        file = fileOpen(buf, "r");
     }
     if (file == 0) {
         LOGGER(ibis::gVerbose > 2)
@@ -1212,7 +1212,7 @@ char* ibis::part::readMetaTags(const char* const dir) {
         }
     } // the loop to parse header
 
-    fclose(file); // close the file
+    fileClose(file); // close the file
 
     return m_tags;
 } // ibis::part::readMetaTags
@@ -1241,10 +1241,10 @@ void ibis::part::readMeshShape(const char* const dir) {
         return;
     }
 
-    FILE* file = fopen(buf, "r");
+    FILE* file = fileOpen(buf, "r");
     if (file == 0) {
         strcpy(buf+(ierr-9), "table.tdc"); // old metadata file name
-        file = fopen(buf, "r");
+        file = fileOpen(buf, "r");
     }
     if (file == 0) {
         LOGGER(ibis::gVerbose >= 0)
@@ -1289,7 +1289,7 @@ void ibis::part::readMeshShape(const char* const dir) {
         }
     } // the loop to parse header
 
-    fclose(file); // close the file
+    fileClose(file); // close the file
 } // ibis::part::readMeshShape
 
 /// Read the metadata file from the named dir.  If dir is the activeDir,
@@ -1318,11 +1318,11 @@ int ibis::part::readMetaData(uint32_t &nrows, columnList &plist,
     std::string tdcname(dir);
     tdcname += FASTBIT_DIRSEP;
     tdcname += "-part.txt";
-    FILE* fptr = fopen(tdcname.c_str(), "r");
+    FILE* fptr = fileOpen(tdcname.c_str(), "r");
     if (fptr == 0) {
         tdcname.erase(tdcname.size()-9);
         tdcname += "table.tdc"; // the old name
-        fptr = fopen(tdcname.c_str(), "r");
+        fptr = fileOpen(tdcname.c_str(), "r");
     }
     if (fptr == 0) {
         LOGGER(ibis::gVerbose > 2)
@@ -1616,7 +1616,7 @@ int ibis::part::readMetaData(uint32_t &nrows, columnList &plist,
             }
         }
     } // parse columns
-    (void) fclose(fptr); // close the tdc file
+    (void) fileClose(fptr); // close the tdc file
 
     if ((uint32_t)num_columns != plist.size() && num_columns < INT_MAX) {
         LOGGER(ibis::gVerbose >= 0)
@@ -1731,7 +1731,7 @@ void ibis::part::writeMetaData(const uint32_t nrows, const columnList &plist,
         delete [] filename;
         return;
     }
-    FILE *fptr = fopen(filename, "w");
+    FILE *fptr = fileOpen(filename, "w");
     if (fptr == 0) {
         LOGGER(ibis::gVerbose >= 0)
             << "Warning -- part::writeMetaData failed to open file \""
@@ -1815,7 +1815,7 @@ void ibis::part::writeMetaData(const uint32_t nrows, const columnList &plist,
     for (columnList::const_iterator it = plist.begin();
          it != plist.end(); ++ it)
         (*it).second->write(fptr);
-    fclose(fptr);
+    fileClose(fptr);
     LOGGER(ibis::gVerbose > 4)
         << "part[" << name() << "]::writeMetaData -- wrote metadata for "
         << nrows << " rows and " << plist.size() << " columns to \""
@@ -2210,10 +2210,10 @@ void ibis::part::freeRIDs() const {
 void ibis::part::fillRIDs(const char* fn) const {
     if (nEvents == 0) return; // can not do anything
 
-    FILE* rf = fopen(fn, "wb");
+    FILE* rf = fileOpen(fn, "wb");
     std::string sfile(fn);
     sfile += ".srt";
-    FILE* sf = fopen(sfile.c_str(), "wb");
+    FILE* sf = fileOpen(sfile.c_str(), "wb");
 
     uint32_t ir = ibis::fileManager::iBeat();
     rid_t tmp;
@@ -2224,16 +2224,16 @@ void ibis::part::fillRIDs(const char* fn) const {
         for (uint32_t i = 0; i < nEvents; ++i) {
             ++ tmp.value;
             (*rids)[i].value = tmp.value;
-            fwrite(&((*rids)[i].value), sizeof(rid_t), 1, rf);
-            fwrite(&((*rids)[i].value), sizeof(rid_t), 1, sf);
-            fwrite(&i, sizeof(uint32_t), 1, sf);
+            fileWrite(&((*rids)[i].value), sizeof(rid_t), 1, rf);
+            fileWrite(&((*rids)[i].value), sizeof(rid_t), 1, sf);
+            fileWrite(&i, sizeof(uint32_t), 1, sf);
         }
-        fclose(rf);
-        fclose(sf);
+        fileClose(rf);
+        fileClose(sf);
     }
     else {
-        if (rf) fclose(rf);
-        if (sf) fclose(sf);
+        if (rf) fileClose(rf);
+        if (sf) fileClose(sf);
         for (uint32_t i = 0; i < nEvents; ++i) {
             ++ tmp.value;
             (*rids)[i].value = tmp.value;
@@ -6696,7 +6696,7 @@ void ibis::part::loadIndexes(const char* iopt, int ropt) const {
         LOGGER(ibis::gVerbose > 1)
             << evt << " attempt to write " << cnt.size() << " bitmap(s) ("
             << tot << ") to " << expf;
-        FILE* fptr = fopen(expf, "w"); // write in ASCII text
+        FILE* fptr = fileOpen(expf, "w"); // write in ASCII text
         if (fptr) { // ready to write out the data
             fprintf(fptr, "%lu %lu %lu\n0\n",
                     static_cast<long unsigned>(nRows()),
@@ -6732,7 +6732,7 @@ void ibis::part::loadIndexes(const char* iopt, int ropt) const {
                     } // while (nis)
                 } // for (j = 0;
             } // for (i = 0;
-            fclose(fptr);
+            fileClose(fptr);
         }
         else {
             LOGGER(ibis::gVerbose > 0)
@@ -18827,7 +18827,7 @@ long ibis::part::verifyBackupDir() {
     if (ierr == 0) {
         // read the file to retrieve Alternative_Directory and
         // Number_of_events
-        FILE* file = fopen(fn.c_str(), "r");
+        FILE* file = fileOpen(fn.c_str(), "r");
         if (file == 0) {
             logWarning("verifyBackupDir", "failed to open file \"%s\" ... %s",
                        fn.c_str(), (errno ? strerror(errno)
@@ -18877,7 +18877,7 @@ long ibis::part::verifyBackupDir() {
                 }
             }
         } // while ...
-        fclose(file);
+        fileClose(file);
     } // if (ierr == 0)
     else if (nEvents > 0) {
         logWarning("verifyBackupDir", "no metadata file in \"%s\".  The "

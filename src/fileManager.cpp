@@ -2253,7 +2253,7 @@ off_t ibis::fileManager::storage::read(const int fdes,
 
 void ibis::fileManager::storage::write(const char* file) const {
     size_t n, i;
-    FILE *in = fopen(file, "wb");
+    FILE *in = fileOpen(file, "wb");
     if (in == 0) {
         LOGGER(ibis::gVerbose > 1)
             << "Warning -- storage::write failed to open file \""
@@ -2263,8 +2263,8 @@ void ibis::fileManager::storage::write(const char* file) const {
     }
 
     n = m_end - m_begin;
-    i = fwrite(static_cast<void*>(m_begin), 1, n, in);
-    fclose(in); // close the file
+    i = fileWrite(static_cast<void*>(m_begin), 1, n, in);
+    fileClose(in); // close the file
     if (i != n) {
         LOGGER(ibis::gVerbose > 1)
             << "Warning -- storage::write expects to write "
@@ -2842,10 +2842,10 @@ void ibis::fileManager::roFile::doMap(const char* file, off_t b, off_t e,
         return;
 
     if (opt == 0) {
-        fdescriptor = open(file, O_RDONLY);
+        fdescriptor = unixOpen(file, O_RDONLY);
     }
     else {
-        fdescriptor = open(file, O_RDWR);
+        fdescriptor = unixOpen(file, O_RDWR);
     }
     if (fdescriptor < 0) {
         LOGGER(ibis::gVerbose > 1)

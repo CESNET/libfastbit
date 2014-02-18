@@ -8,6 +8,7 @@
 /// FastBit.
 ///
 #include "const.h"
+#include "fileWrapper.h"
 #include <stdlib.h>
 
 #include <cctype>       // std::isspace
@@ -46,6 +47,7 @@ int truncate(const char*, uint32_t);
 #define FASTBIT_MIN_MAP_SIZE 1048576
 #endif
 
+#define HAVE_MMAP 0 // Velan addition
 #if ! (defined(HAVE_MMAP) || defined(_MSC_VER))
 #  if defined(_XOPEN_SOURCE)
 #    define HAVE_MMAP _XOPEN_SOURCE - 0 >= 500
@@ -128,14 +130,20 @@ int truncate(const char*, uint32_t);
 #define UnixFStat ::_fstat
 #define Stat_T    struct _stat
 #else //_BSD_SOURCE || _ISOC99_SOURCE || _XOPEN_SOURCE >= 500 || _POSIX_C_SOURCE >= 200112L
-#define UnixOpen  ::open
-#define UnixClose ::close
-#define UnixRead  ::read
-#define UnixWrite ::write
-#define UnixSeek  ::lseek
+//#define UnixOpen  ::open
+//#define UnixClose ::close
+//#define UnixRead  ::read
+//#define UnixWrite ::write
+//#define UnixSeek  ::lseek
+#define UnixOpen  unixOpen
+#define UnixClose unixClose
+#define UnixRead  unixRead
+#define UnixWrite unixWrite
+#define UnixSeek  unixLseek
 #define UnixFlush ::fsync
 #define UnixSnprintf ::snprintf
-#define UnixStat  ::stat
+//#define UnixStat  ::stat
+#define UnixStat  unixStat
 #define UnixFStat ::fstat
 #define Stat_T    struct stat
 #endif

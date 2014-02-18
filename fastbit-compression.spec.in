@@ -1,4 +1,4 @@
-Name: fastbit
+Name: fastbit-compression
 Version: @PACKAGE_VERSION@
 Release: 1
 Summary: An Efficient Compressed Bitmap Index Technology
@@ -13,7 +13,7 @@ Source: %name-%version.tar.gz
 
 BuildRequires: flex gcc-c++ doxygen graphviz
 BuildRequires: sharutils
-Conflicts: libfastbit-compression
+
 
 %description
 FastBit is an open-source data processing library following the spirit
@@ -28,7 +28,6 @@ user data is NOT required to be under the control of FastBit software.
 Summary: Shared libraries of FastBit
 Group: System/Libraries
 Provides: fastbit-liberouter
-Conflicts: libfastbit-compression
 
 %description -n lib%name
 FastBit is an open-source data processing library following the spirit
@@ -46,7 +45,6 @@ Summary: Development files of FastBit
 Group: Development/C++
 Requires: lib%name = %version-%release
 Provides: fastbit-liberouter-devel
-Conflicts: libfastbit-compression-devel
 
 %description -n lib%name-devel
 FastBit is an open-source data processing library following the spirit

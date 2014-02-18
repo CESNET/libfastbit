@@ -53,9 +53,9 @@ public:
     MersenneTwister() {
 	unsigned seed;
 #if defined(FASTBIT_USE_DEV_URANDOM)
-	FILE* fptr = fopen("/dev/urandom", "rb");
+	FILE* fptr = fileOpen("/dev/urandom", "rb");
 	if (fptr != 0) {
-	    int ierr = fread(&seed, sizeof(seed), 1, fptr);
+	    int ierr = fileRead(&seed, sizeof(seed), 1, fptr);
 	    if (ierr < 1 || seed == 0)
 		seed = time(0);
 	}

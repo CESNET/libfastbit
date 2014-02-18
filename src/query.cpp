@@ -4484,7 +4484,7 @@ void ibis::query::readQuery(const ibis::partList& tl) {
     strcpy(fn, myDir);
     strcat(fn, "query");
 
-    FILE* fptr = fopen(fn, "r");
+    FILE* fptr = fileOpen(fn, "r");
     if (fptr == 0) {
         logWarning("readQuery", "failed to open query file \"%s\" ... %s", fn,
                    (errno ? strerror(errno) : "no free stdio stream"));
@@ -4492,7 +4492,7 @@ void ibis::query::readQuery(const ibis::partList& tl) {
         return;
     }
 
-    IBIS_BLOCK_GUARD(fclose, fptr);
+    IBIS_BLOCK_GUARD(fileClose, fptr);
     // user id
     if (0 == fgets(fn, MAX_LINE, fptr)) {
         LOGGER(ibis::gVerbose > 0)
@@ -4614,7 +4614,7 @@ void ibis::query::writeQuery() {
     strcpy(fn, myDir);
     strcat(fn, "query");
 
-    FILE* fptr = fopen(fn, "w");
+    FILE* fptr = fileOpen(fn, "w");
     if (fptr == 0) {
         logWarning("writeQuery", "failed to open file \"%s\" ... %s", fn,
                    (errno ? strerror(errno) : "no free stdio stream"));
@@ -4647,7 +4647,7 @@ void ibis::query::writeQuery() {
                     static_cast<long unsigned>((*it).num.event));
         }
     }
-    fclose(fptr);
+    fileClose(fptr);
 } // ibis::query::writeQuery
 
 void ibis::query::readHits() {

@@ -4,7 +4,7 @@ SUBDIRS = src examples java tests contrib
 bin_SCRIPTS = tests/scripts/fastbit-config
 
 pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = fastbit.pc
+pkgconfig_DATA = fastbit-compression.pc
 
 # Local change
 RPMDIR = RPMBUILD
@@ -15,7 +15,7 @@ EXTRA_DIST = runconfig win/README win/Win.mak win/MinGW.mak win/ardea.vcproj \
 	win/FlexLexer.h contrib/README contrib/fbmerge/fbmerge.cpp \
 	contrib/fbmerge/Makefile.am contrib/fbmerge/Makefile.in \
 	contrib/fbmerge/fbmerge.sln contrib/fbmerge/fbmerge.vcproj \
-	fastbit.spec.in README.md
+	fastbit-compression.spec.in README.md
 
 docdir = ${datadir}/doc/${PACKAGE}
 

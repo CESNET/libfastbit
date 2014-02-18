@@ -4633,14 +4633,14 @@ void ibis::bin::readBinBoundaries(const char *fnm, uint32_t nb) {
     if (fnm == 0 || *fnm == 0) return;
 
     char buf[MAX_LINE];
-    FILE *fptr = fopen(fnm, "r");
+    FILE *fptr = fileOpen(fnm, "r");
     if (fptr == 0) {
         if (col != 0 && col->partition() != 0 &&
             col->partition()->currentDataDir() != 0) {
             std::string fullname = col->partition()->currentDataDir();
             fullname += FASTBIT_DIRSEP;
             fullname += fnm;
-            fptr = fopen(fullname.c_str(), "r");
+            fptr = fileOpen(fullname.c_str(), "r");
             if (fptr == 0) {
                 col->logWarning("bin::readBinBoundaries",
                                 "failed to open file \"%s\"",
@@ -4661,7 +4661,7 @@ void ibis::bin::readBinBoundaries(const char *fnm, uint32_t nb) {
             if (nb > 0 && cnt >= nb) break;
         }
     } // while (fgets...
-    fclose(fptr);
+    fileClose(fptr);
     LOGGER(ibis::gVerbose > 3)
         << "bin::readBinBoundaries got " << cnt << " value(s) from " << fnm;
 } // ibis::bin::readBinBoundaries

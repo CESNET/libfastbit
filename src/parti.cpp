@@ -635,7 +635,7 @@ long ibis::part::reorderValues(const char *fname,
     }
 
     // write the values out in the new order
-    UnixSeek(fdes, 0, SEEK_SET); // rewind
+    UnixSeek(fdes, 0, SEEK_SET); // fileRewind
     const unsigned block = PREFERRED_BLOCK_SIZE / sizeof(T);
     array_t<T> buf(block);
     for (uint32_t i = 0; i < nrows; i += block) {

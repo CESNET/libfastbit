@@ -6734,7 +6734,7 @@ double ibis::colDoubles::getSum() const {
 long ibis::colInts::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(int32_t), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(int32_t), nelm, fptr);
     }
     else {
         return 0;
@@ -6760,7 +6760,7 @@ void ibis::colInts::write(std::ostream& out, uint32_t i) const {
 long ibis::colUInts::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(uint32_t), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(uint32_t), nelm, fptr);
     }
     else {
         return 0;
@@ -6797,7 +6797,7 @@ void ibis::colUInts::write(std::ostream& out, uint32_t i) const {
 long ibis::colLongs::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(int64_t), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(int64_t), nelm, fptr);
     }
     else {
         return 0;
@@ -6820,7 +6820,7 @@ void ibis::colLongs::write(std::ostream& out, uint32_t i) const {
 long ibis::colULongs::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(uint64_t), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(uint64_t), nelm, fptr);
     }
     else {
         return 0;
@@ -6843,7 +6843,7 @@ void ibis::colULongs::write(std::ostream& out, uint32_t i) const {
 long ibis::colShorts::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(int16_t), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(int16_t), nelm, fptr);
     }
     else {
         return 0;
@@ -6860,7 +6860,7 @@ void ibis::colShorts::write(std::ostream& out, uint32_t i) const {
 long ibis::colUShorts::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(uint16_t), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(uint16_t), nelm, fptr);
     }
     else {
         return 0;
@@ -6883,7 +6883,7 @@ void ibis::colUShorts::write(std::ostream& out, uint32_t i) const {
 long ibis::colBytes::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(char), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(char), nelm, fptr);
     }
     else {
         return 0;
@@ -6906,7 +6906,7 @@ void ibis::colBytes::write(std::ostream& out, uint32_t i) const {
 long ibis::colUBytes::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(unsigned char), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(unsigned char), nelm, fptr);
     }
     else {
         return 0;
@@ -6929,7 +6929,7 @@ void ibis::colUBytes::write(std::ostream& out, uint32_t i) const {
 long ibis::colFloats::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(float), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(float), nelm, fptr);
     }
     else {
         return 0;
@@ -6952,7 +6952,7 @@ void ibis::colFloats::write(std::ostream& out, uint32_t i) const {
 long ibis::colDoubles::write(FILE* fptr) const {
     if (array) {
         uint32_t nelm = array->size();
-        return fwrite(array->begin(), sizeof(double), nelm, fptr);
+        return fileWrite(array->begin(), sizeof(double), nelm, fptr);
     }
     else {
         return 0;
@@ -6980,7 +6980,7 @@ long ibis::colStrings::write(FILE* fptr) const {
     long cnt = 0;
     const uint32_t nelm = array->size();
     for (uint32_t i = 0; i < nelm; ++ i) {
-        int ierr = fwrite((*array)[i].c_str(), sizeof(char),
+        int ierr = fileWrite((*array)[i].c_str(), sizeof(char),
                           (*array)[i].size()+1, fptr);
         cnt += (int) (ierr > long((*array)[i].size()));
         LOGGER(ierr <= 0 && ibis::gVerbose >= 0)
@@ -7000,11 +7000,11 @@ long ibis::colBlobs::write(FILE* fptr) const {
 
     static char padding[8] = {0, 0, 0, 0, 0, 0, 0, 0};
     long int cnt = 0;
-    long int pos = ftell(fptr);
+    long int pos = fileTell(fptr);
     long int ierr;
     if ((pos & 7) != 0) {
         ierr = 8 - (pos & 7);
-        if (fwrite(padding, 1, ierr, fptr) != (size_t)ierr) {
+        if (fileWrite(padding, 1, ierr, fptr) != (size_t)ierr) {
             LOGGER(ibis::gVerbose > 0)
                 << "Warning -- colBlobs[" << col->fullname()
                 << "]::write failed to write " << ierr
@@ -7016,7 +7016,7 @@ long ibis::colBlobs::write(FILE* fptr) const {
     const uint32_t nelm = array->size();
     for (uint32_t i = 0; i < nelm; ++ i) {
         uint64_t sz = (*array)[i].size();
-        ierr = fwrite(&sz, 8, 1, fptr);
+        ierr = fileWrite(&sz, 8, 1, fptr);
         if (ierr < 1) {
             LOGGER(ibis::gVerbose > 0)
                 << "Warning -- colBlobs[" << col->fullname()
@@ -7024,7 +7024,7 @@ long ibis::colBlobs::write(FILE* fptr) const {
                 << " row " << i;
             return -2;
         }
-        ierr = fwrite((*array)[i].address(), 1, ierr, fptr);
+        ierr = fileWrite((*array)[i].address(), 1, ierr, fptr);
         if (ierr == (long)(sz)) {
             ++ cnt;
         }

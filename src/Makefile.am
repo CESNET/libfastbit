@@ -6,7 +6,7 @@ libfastbit_la_SOURCES = part.cpp bordm.cpp bord.cpp ibin.cpp column.cpp \
  parth3d.cpp meshQuery.cpp query.cpp colValues.cpp bitvector.cpp islice.cpp \
  ixambit.cpp parth.cpp mensa.cpp tafel.cpp party.cpp qExpr.cpp utilidor.cpp \
  bitvector64.cpp irange.cpp category.cpp iroster.cpp irelic.cpp ixpack.cpp \
- fileManager.cpp filter.cpp bundle.cpp capi.cpp ixbylt.cpp ixpale.cpp util.cpp \
+ fileManager.cpp fileWrapper.cpp filter.cpp bundle.cpp capi.cpp ixbylt.cpp ixpale.cpp util.cpp \
  ixzone.cpp ixfuge.cpp ixfuzz.cpp isbiad.cpp icegale.cpp ifade.cpp \
  ixzona.cpp parti.cpp idirekte.cpp blob.cpp jnatural.cpp iskive.cpp isapid.cpp \
  idbak2.cpp jrange.cpp icentre.cpp iapi.cpp quaere.cpp countQuery.cpp \
@@ -16,7 +16,7 @@ libfastbit_la_SOURCES = part.cpp bordm.cpp bord.cpp ibin.cpp column.cpp \
 libfastbit_la_LDFLAGS = -version-info $(LIB_VERSION_INFO)
 
 fastbitincludedir = $(includedir)/fastbit
-fastbitinclude_HEADERS = array_t.h bitvector.h bitvector64.h blob.h bord.h bundle.h capi.h category.h colValues.h column.h const.h countQuery.h dictionary.h fileManager.h horometer.h iapi.h ibin.h ibis.h idirekte.h ikeywords.h index.h irelic.h iroster.h quaere.h mensa.h meshQuery.h part.h filter.h jnatural.h jrange.h whereClause.h whereLexer.h whereParser.hh qExpr.h query.h resource.h rids.h tab.h table.h tafel.h twister.h util.h utilidor.h location.hh position.hh stack.hh selectClause.h selectLexer.h selectParser.hh fromClause.h fromLexer.h fromParser.hh fastbit-config.h
+fastbitinclude_HEADERS = fileWrapper.h array_t.h bitvector.h bitvector64.h blob.h bord.h bundle.h capi.h category.h colValues.h column.h const.h countQuery.h dictionary.h fileManager.h horometer.h iapi.h ibin.h ibis.h idirekte.h ikeywords.h index.h irelic.h iroster.h quaere.h mensa.h meshQuery.h part.h filter.h jnatural.h jrange.h whereClause.h whereLexer.h whereParser.hh qExpr.h query.h resource.h rids.h tab.h table.h tafel.h twister.h util.h utilidor.h location.hh position.hh stack.hh selectClause.h selectLexer.h selectParser.hh fromClause.h fromLexer.h fromParser.hh fastbit-config.h
 
 EXTRA_DIST=whereLexer.ll whereParser.yy selectLexer.ll selectParser.yy fromLexer.ll fromParser.yy Doxyfile
 

@@ -4,7 +4,7 @@ AC_COPYRIGHT((c) the Regents of the University of California)
 AC_REVISION($Revision$)
 AC_PREREQ(2.59)
 
-AC_INIT([FastBit], [2.0.2.3], [fastbit-users@hpcrdm.lbl.gov])
+AC_INIT([FastBit-compression], [2.0.2.3], [fastbit-users@hpcrdm.lbl.gov])
 #AC_PACKAGE_URL(http://sdm.lbl.gov/fastbit/)
 AC_CONFIG_MACRO_DIR([tests/m4])
 AC_CONFIG_SRCDIR([src/index.cpp])
@@ -27,6 +27,7 @@ AC_LANG(C++)
 # Checks for libraries.
 AC_CHECK_LIB([m], [log10])
 AC_CHECK_LIB([rt], [clock_gettime])
+AC_CHECK_LIB([z], [gzopen],, AC_MSG_ERROR([libz library is required for compression support]))
 ###AC_CHECK_LIB([pthread], [pthread_self], , AC_MSG_ERROR(FastBit requires pthread support))
 
 # Checks for header files.
@@ -936,7 +937,7 @@ AC_CONFIG_FILES([Makefile src/Makefile examples/Makefile tests/Makefile
 	         java/Makefile contrib/Makefile contrib/fbmerge/Makefile])
 AC_CONFIG_FILES([tests/scripts/fastbit-config],
 		[chmod a+x tests/scripts/fastbit-config])
-AC_CONFIG_FILES([fastbit.spec fastbit.pc])
+AC_CONFIG_FILES([fastbit-compression.spec fastbit-compression.pc])
 
 AC_CONFIG_COMMANDS([FastBit-prefix],
 [rm -f src/stamp-h1;

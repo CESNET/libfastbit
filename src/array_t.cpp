@@ -1825,7 +1825,7 @@ int ibis::array_t<T>::write(const char* file) const {
     if (m_end <= m_begin) return 0; // nothing to write
 
     off_t n, i;
-    FILE *out = fopen(file, "wb");
+    FILE *out = fileOpen(file, "wb");
     if (out == 0) {
         LOGGER(ibis::gVerbose >= 0)
             << "array_t<T>::write is unable open file \"" << file << "\" ... "
@@ -1834,8 +1834,8 @@ int ibis::array_t<T>::write(const char* file) const {
     }
 
     n = m_end - m_begin;
-    i = fwrite(reinterpret_cast<void*>(m_begin), sizeof(T), n, out);
-    fclose(out); // close the file
+    i = fileWrite(reinterpret_cast<void*>(m_begin), sizeof(T), n, out);
+    fileClose(out); // close the file
     if (i != n) {
         LOGGER(ibis::gVerbose >= 0)
             << "array_t<T>::write expects to write " << n << ' '
@@ -1855,7 +1855,7 @@ int ibis::array_t<T>::write(FILE* fptr) const {
 
     off_t n, i;
     n = m_end - m_begin;
-    i = fwrite(reinterpret_cast<void*>(m_begin), sizeof(T), n, fptr);
+    i = fileWrite(reinterpret_cast<void*>(m_begin), sizeof(T), n, fptr);
     if (i != n) {
         LOGGER(ibis::gVerbose >= 0)
             << "array_t<T>::write() expects to write " << n << ' '

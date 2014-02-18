@@ -42,7 +42,7 @@
      (SQL style comment) may be included in the input CSV file.  These
      comment lines are skipped.
 */
-#include <stdio.h>	// fopen, fgets
+#include <stdio.h>	// fileOpen, fgets
 #include <stdlib.h>	// exit
 #include <string.h>	// strlen
 #include <ctype.h>	// isdigit
@@ -58,6 +58,8 @@
 #include <sys/stat.h>	// mkdir
 #include <sys/types.h>
 #endif
+
+#include "fileWrapper.h"
 
 #include <iostream>	// std::cout, std::cerr, std::endl
 #include <vector>	// std::vector
@@ -311,7 +313,7 @@ int readString(char *&tmp, std::string &str) {
 
 // Read a line of the input CSV file.
 int readALine(FILE *fptr, char*& buf, unsigned& lbuf, bool skipcomment=true) {
-    long start = ftell(fptr); // start position
+    long start = fileTell(fptr); // start position
     int retry = 0;
     if (buf == 0) { // allocate a buffer of 1024 characters
 	buf = new char[1024];
@@ -366,7 +368,7 @@ int readALine(FILE *fptr, char*& buf, unsigned& lbuf, bool skipcomment=true) {
 			  << lbuf << "], can not continue" << std::endl;
 		return -4;
 	    }
-	    fseek(fptr, start, SEEK_SET);
+	    fileSeek(fptr, start, SEEK_SET);
 	    retry = 1;
 	}
 	else { // got a line of text in buf
@@ -422,7 +424,7 @@ int readValues(FILE *fptr, char*&buf, unsigned& lbuf) {
 			columns[i].lo = vint;
 		    if (vint > columns[i].hi)
 			columns[i].hi = vint;
-		    (void) fwrite(&vint, sizeof(vint), 1, columns[i].file);
+		    (void) fileWrite(&vint, sizeof(vint), 1, columns[i].file);
 		}
 		else {
 		    ++ ierr;
@@ -435,21 +437,21 @@ int readValues(FILE *fptr, char*&buf, unsigned& lbuf) {
 			    columns[i].lo = dbl;
 			if (dbl > columns[i].hi)
 			    columns[i].hi = dbl;
-			(void) fwrite(&dbl, sizeof(dbl), 1, columns[i].file);
+			(void) fileWrite(&dbl, sizeof(dbl), 1, columns[i].file);
 		    }
 		    else {
 			tmp = s0;
 			std::string str;
 			columns[i].type = STRING;
 			jerr = readString(tmp, str);
-			(void) fwrite(str.c_str(), 1, str.size()+1,
+			(void) fileWrite(str.c_str(), 1, str.size()+1,
 				      columns[i].file);
 		    }
 		}
 	    }
 	    else { // default int value is zero
 		int vint = 0;
-		fwrite(&vint, sizeof(vint), 1, columns[i].file);
+		fileWrite(&vint, sizeof(vint), 1, columns[i].file);
 	    }
 	    break;
 	case DOUBLE:
@@ -462,7 +464,7 @@ int readValues(FILE *fptr, char*&buf, unsigned& lbuf) {
 			columns[i].lo = dbl;
 		    if (dbl > columns[i].hi)
 			columns[i].hi = dbl;
-		    (void) fwrite(&dbl, sizeof(dbl), 1, columns[i].file);
+		    (void) fileWrite(&dbl, sizeof(dbl), 1, columns[i].file);
 		}
 		else {
 		    ++ ierr;
@@ -470,20 +472,20 @@ int readValues(FILE *fptr, char*&buf, unsigned& lbuf) {
 		    std::string str;
 		    columns[i].type = STRING;
 		    jerr = readString(tmp, str);
-		    (void) fwrite(str.c_str(), 1, str.size()+1,
+		    (void) fileWrite(str.c_str(), 1, str.size()+1,
 				  columns[i].file);
 		}
 	    }
 	    else { // default double value is zero
 		double dbl = 0;
-		(void) fwrite(&dbl, sizeof(dbl), 1, columns[i].file);
+		(void) fileWrite(&dbl, sizeof(dbl), 1, columns[i].file);
 	    }
 	    break;
 	case STRING:
 	    {
 		std::string str;
 		readString(tmp, str);
-		(void) fwrite(str.c_str(), 1, str.size()+1, columns[i].file);
+		(void) fileWrite(str.c_str(), 1, str.size()+1, columns[i].file);
 	    }
 	    break;
 	}
@@ -512,7 +514,7 @@ int main(int argc, char** argv) {
     }
 
     // open the input file
-    FILE *fptr = fopen(argv[1], "r");
+    FILE *fptr = fileOpen(argv[1], "r");
     if (fptr == 0) {
 	std::cerr << *argv << " failed to open file " << argv[1]
 		  << " for reading\n" << std::endl;
@@ -526,7 +528,7 @@ int main(int argc, char** argv) {
     if (columns.empty()) {
 	std::cerr << *argv << ": the first line of file " << argv[1]
 		  << " does not contain any strings\n" << std::endl;
-	fclose(fptr);
+	fileClose(fptr);
 	return -5;
     }
     std::cout << "File " << argv[1] << " contains " << columns.size()
@@ -551,7 +553,7 @@ int main(int argc, char** argv) {
 	return -6;
     }
     for (unsigned i = 0; i < columns.size(); ++ i) {
-	columns[i].file = fopen(columns[i].name.c_str(), "wb");
+	columns[i].file = fileOpen(columns[i].name.c_str(), "wb");
 	if (columns[i].file == 0) {
 	    std::cerr << *argv << " unable to open output file "
 		      << columns[i].name << " in directory " << dest
@@ -563,26 +565,26 @@ int main(int argc, char** argv) {
 	std::cerr << *argv << ": failed to open some output files. "
 		  << "Make sure directory " << dest << " is accessible\n"
 		  << std::endl;
-	fclose(fptr);
+	fileClose(fptr);
 	for (unsigned i = 0; i < columns.size(); ++ i)
 	    if (columns[i].file != 0)
-		fclose(columns[i].file);
+		fileClose(columns[i].file);
 	return -7;
     }
 
     // reading the bulk of the data
     unsigned long cnt = 0; // number of rows read
-    const long endline1 = ftell(fptr); // end of the first line
+    const long endline1 = fileTell(fptr); // end of the first line
     do {
 	ierr = readValues(fptr, buf, lbuf);
 	if (ierr > 0) {
 	    if (cnt > 0) { // need to rewind
 		cnt = 0;
-		fseek(fptr, endline1, SEEK_SET);
+		fileSeek(fptr, endline1, SEEK_SET);
 		for (cList::iterator it = columns.begin();
 		     it != columns.end();
 		     ++ it)
-		    rewind((*it).file);
+		    fileRewind((*it).file);
 	    }
 	    else {
 		cnt = 1;
@@ -603,14 +605,14 @@ int main(int argc, char** argv) {
     else
 	std::cout << *argv << " successfully read " << cnt
 		  << " rows from file " << argv[1] << std::endl;
-    fclose(fptr);
+    fileClose(fptr);
     for (cList::iterator it = columns.begin();
 	 it != columns.end();
 	 ++ it)
-	fclose((*it).file);
+	fileClose((*it).file);
     if (cnt > 0) {
 	// write out the -part.txt file
-	fptr = fopen("-part.txt", "w");
+	fptr = fileOpen("-part.txt", "w");
 	if (fptr == 0) {
 	    std::cerr << *argv << " unable to open file -part.txt in "
 		      << dest << "\n" << std::endl;
@@ -672,7 +674,7 @@ int main(int argc, char** argv) {
 		break;
 	    }
 	}
-	fclose(fptr);
+	fileClose(fptr);
 	std::cout << *argv << " outputed " << cnt << " rows to directory "
 		  << dest << std::endl;
     }

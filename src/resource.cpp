@@ -48,7 +48,7 @@ int ibis::resource::read(const char* fn) {
     const char* name = fn; // first choice is the argument to this function
     if (name != 0 && *name != 0 && ibis::util::getFileSize(name) > 0) {
         tried = name;
-        conf = fopen(name, "r");
+        conf = fileOpen(name, "r");
 
         if (conf == 0){
             // LOGGER(ibis::gVerbose >= 0)
@@ -62,7 +62,7 @@ int ibis::resource::read(const char* fn) {
         // second choice is the environment variable
         name = getenv("IBISRC");
         if (name != 0 && *name != 0 && ibis::util::getFileSize(name) > 0) {
-            conf = fopen(name, "r");
+            conf = fileOpen(name, "r");
             if (tried.empty())
                 tried = name;
             else {
@@ -74,7 +74,7 @@ int ibis::resource::read(const char* fn) {
     if (conf == 0) {
         // third choice is a file in this directory
         name = "ibis.rc";
-        conf = fopen(name, "r");
+        conf = fileOpen(name, "r");
         if (tried.empty())
             tried = name;
         else {
@@ -85,7 +85,7 @@ int ibis::resource::read(const char* fn) {
     if (conf == 0) {
         // fourth choice is a hidden file in this directory
         name = ".ibisrc";
-        conf = fopen(name, "r");
+        conf = fileOpen(name, "r");
         if (tried.empty())
             tried = name;
         else {
@@ -105,7 +105,7 @@ int ibis::resource::read(const char* fn) {
 #endif
             if (ierr > 0 && ierr < MAX_LINE &&
                 ibis::util::getFileSize(line) > 0) {
-                conf = fopen(line, "r");
+                conf = fileOpen(line, "r");
                 name = line;
                 if (tried.empty())
                     tried = line;
@@ -156,7 +156,7 @@ int ibis::resource::read(const char* fn) {
         //      << line << "\" because it contains no '='";
         // }
     }
-    fclose(conf);
+    fileClose(conf);
 #if DEBUG+0 > 0 || _DEBUG+0 > 0
     ibis::util::logger lg;
     write(lg());

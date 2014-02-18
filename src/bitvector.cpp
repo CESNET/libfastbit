@@ -2102,7 +2102,7 @@ void ibis::bitvector::read(const char * fn) {
 void ibis::bitvector::write(const char * fn) const {
     if (fn == 0 || *fn == 0) return;
 
-    FILE *out = fopen(fn, "wb");
+    FILE *out = fileOpen(fn, "wb");
     if (out == 0) {
         LOGGER(ibis::gVerbose > 0)
             << "Warning -- bitvector::write failed to open \""
@@ -2112,7 +2112,7 @@ void ibis::bitvector::write(const char * fn) const {
     }
 
     int ierr;
-    IBIS_BLOCK_GUARD(fclose, out);
+    IBIS_BLOCK_GUARD(fileClose, out);
 #if defined(WAH_CHECK_SIZE)
     word_t nb = (nbits > 0 ? do_cnt() : nbits);
     if (nb != nbits) {
@@ -2123,7 +2123,7 @@ void ibis::bitvector::write(const char * fn) const {
              << "Reset nbits to " << nb;
     }
 #endif
-    ierr = fwrite((const void*)m_vec.begin(), sizeof(word_t), m_vec.size(),
+    ierr = fileWrite((const void*)m_vec.begin(), sizeof(word_t), m_vec.size(),
                   out);
     if (ierr != (long)(m_vec.size())) {
         LOGGER(ibis::gVerbose > 0)
@@ -2149,23 +2149,23 @@ void ibis::bitvector::write(const char * fn) const {
             << "), setting it to " << tmp.val;
     }
     if (tmp.nbits > 0) {
-        ierr = fwrite((const void*)&(tmp.val), sizeof(word_t), 1, out);
+        ierr = fileWrite((const void*)&(tmp.val), sizeof(word_t), 1, out);
         LOGGER(ierr < 1 && ibis::gVerbose > 0)
             << "Warning -- bitvector::write failed to write the active word ("
             << tmp.val << ") to " << fn;
     }
-    ierr = fwrite((const void*)&(tmp.nbits), sizeof(word_t), 1, out);
+    ierr = fileWrite((const void*)&(tmp.nbits), sizeof(word_t), 1, out);
     LOGGER(ierr < 1 && ibis::gVerbose > 0)
         << "Warning -- bitvector::write failed to write the number of bits "
         "in the active word (" << tmp.nbits << ") to " << fn;
 #else
     if (active.nbits > 0) {
-        ierr = fwrite((const void*)&(active.val), sizeof(word_t), 1, out);
+        ierr = fileWrite((const void*)&(active.val), sizeof(word_t), 1, out);
         LOGGER(ierr < 1 && ibis::gVerbose > 0)
             << "Warning -- bitvector::write failed to write the active word ("
             << active.val << ") to " << fn;
     }
-    ierr = fwrite((const void*)&(active.nbits), sizeof(word_t), 1, out);
+    ierr = fileWrite((const void*)&(active.nbits), sizeof(word_t), 1, out);
     LOGGER(ierr < 1 && ibis::gVerbose > 0)
         << "Warning -- bitvector::write failed to write the number of bits "
         "in the active word (" << active.nbits << ") to " << fn;
