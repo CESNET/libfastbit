@@ -15,7 +15,7 @@ EXTRA_DIST = runconfig win/README win/Win.mak win/MinGW.mak win/ardea.vcproj \
 	win/FlexLexer.h contrib/README contrib/fbmerge/fbmerge.cpp \
 	contrib/fbmerge/Makefile.am contrib/fbmerge/Makefile.in \
 	contrib/fbmerge/fbmerge.sln contrib/fbmerge/fbmerge.vcproj \
-	fastbit.spec.in
+	fastbit.spec.in README.md
 
 docdir = ${datadir}/doc/${PACKAGE}
 
