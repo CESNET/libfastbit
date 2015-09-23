@@ -447,7 +447,7 @@ ibis::bord::bord(const char *tn, const char *td,
             else { // normal name
                 const ibis::column* refcol = 0;
                 for (unsigned i = 0; refcol == 0 && i < ref.size(); ++ i) {
-                    refcol = ref[0]->getColumn(var.variableName());
+                    refcol = ref[i]->getColumn(var.variableName());
                     if (refcol == 0) {
                         size_t nch = std::strlen(ref[i]->name());
                         if (0 == strnicmp(ref[i]->name(), vname, nch) &&
