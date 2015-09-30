@@ -35,7 +35,7 @@ ibis::bord::bord(const char *tn, const char *td, uint64_t nr,
         LOGGER(ibis::gVerbose >= 0)
             << "Error -- bord::ctor can not handle " << nr
             << " rows in an in-memory table";
-        throw "Too many rows for an in-memory table";
+        throw "Too many rows for an in-memory table" IBIS_FILE_LINE;
     }
 
     switchTime = time(0);
@@ -314,7 +314,8 @@ ibis::bord::bord(const char *tn, const char *td,
                     LOGGER(ibis::gVerbose >= 0)
                         << "Error -- bord::ctor failed to allocate column "
                         << cname << " for in-memory partition " << tn;
-                    throw "bord::ctor failed to allocate a column";
+                    throw "bord::ctor failed to allocate a column"
+                        IBIS_FILE_LINE;
                 }
             }
             else if (refcol != 0) {
@@ -344,7 +345,8 @@ ibis::bord::bord(const char *tn, const char *td,
                     LOGGER(ibis::gVerbose >= 0)
                         << "Error -- bord::ctor failed to allocate column "
                         << cname << " for in-memory partition " << tn;
-                    throw "bord::ctor failed to allocate a column";
+                    throw "bord::ctor failed to allocate a column"
+                        IBIS_FILE_LINE;
                 }
             }
             else {
@@ -352,7 +354,8 @@ ibis::bord::bord(const char *tn, const char *td,
                     << "Error -- bord::ctor failed to locate column "
                     << var.variableName() << " in data partition "
                     << ref.name();
-                throw "bord::ctor failed to locate a needed column";
+                throw "bord::ctor failed to locate a needed column"
+                    IBIS_FILE_LINE;
             }
             break;}
         default: {
@@ -366,7 +369,8 @@ ibis::bord::bord(const char *tn, const char *td,
                 LOGGER(ibis::gVerbose >= 0)
                     << "Error -- bord::ctor failed to allocate column "
                     << cname << " for in-memory partition " << tn;
-                throw "bord::ctor failed to allocate a column";
+                throw "bord::ctor failed to allocate a column"
+                    IBIS_FILE_LINE;
             }
             break;}
         }
@@ -396,7 +400,8 @@ ibis::bord::bord(const char *tn, const char *td,
                  const ibis::selectClause &sc, const ibis::constPartList &ref)
     : ibis::part("in-core") {
     if (ref.empty())
-        throw "Can not construct a bord with an empty list of parts";
+        throw "Can not construct a bord with an empty list of parts"
+            IBIS_FILE_LINE;
 
     if (td != 0 && *td != 0) {
         m_desc = td;
@@ -441,7 +446,8 @@ ibis::bord::bord(const char *tn, const char *td,
                     LOGGER(ibis::gVerbose >= 0)
                         << "Error -- bord::ctor failed to allocate column "
                         << cname << " for in-memory partition " << tn;
-                    throw "bord::ctor failed to allocate a column";
+                    throw "bord::ctor failed to allocate a column"
+                        IBIS_FILE_LINE;
                 }
             }
             else { // normal name
@@ -493,7 +499,8 @@ ibis::bord::bord(const char *tn, const char *td,
                         LOGGER(ibis::gVerbose >= 0)
                             << "Error -- bord::ctor failed to allocate column "
                             << cname << " for in-memory partition " << tn;
-                        throw "bord::ctor failed to allocate a column";
+                        throw "bord::ctor failed to allocate a column"
+                            IBIS_FILE_LINE;
                     }
                 }
                 else {
@@ -501,7 +508,8 @@ ibis::bord::bord(const char *tn, const char *td,
                         << "Error -- bord::ctor failed to locate column "
                         << var.variableName() << " in " << ref.size()
                         << " data partition" << (ref.size() > 1 ? "s" : "");
-                    throw "bord::ctor failed to locate a needed column";
+                    throw "bord::ctor failed to locate a needed column"
+                        IBIS_FILE_LINE;
                 }
             }
             break;}
@@ -516,7 +524,7 @@ ibis::bord::bord(const char *tn, const char *td,
                 LOGGER(ibis::gVerbose >= 0)
                     << "Error -- bord::ctor failed to allocate column "
                     << cname << " for in-memory partition " << tn;
-                throw "bord::ctor failed to allocate a column";
+                throw "bord::ctor failed to allocate a column" IBIS_FILE_LINE;
             }
             break;}
         default: {
@@ -530,7 +538,7 @@ ibis::bord::bord(const char *tn, const char *td,
                 LOGGER(ibis::gVerbose >= 0)
                     << "Error -- bord::ctor failed to allocate column "
                     << cname << " for in-memory partition " << tn;
-                throw "bord::ctor failed to allocate a column";
+                throw "bord::ctor failed to allocate a column" IBIS_FILE_LINE;
             }
             break;}
         }
@@ -5230,7 +5238,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<signed char>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::UBYTE: {
@@ -5240,7 +5248,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<unsigned char>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::SHORT: {
@@ -5250,7 +5258,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<int16_t>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::USHORT: {
@@ -5260,7 +5268,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<uint16_t>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::INT: {
@@ -5270,7 +5278,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<int32_t>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::UINT: {
@@ -5280,7 +5288,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<uint32_t>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::LONG: {
@@ -5290,7 +5298,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<int64_t>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::ULONG: {
@@ -5300,7 +5308,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<uint64_t>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::FLOAT: {
@@ -5310,7 +5318,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<float>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::DOUBLE: {
@@ -5320,7 +5328,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<double>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::TEXT: {
@@ -5330,7 +5338,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<std::vector<std::string>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::CATEGORY: {
@@ -5358,7 +5366,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<std::vector<std::string>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::OID: {
@@ -5368,7 +5376,7 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<rid_t>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         case ibis::BLOB: {
@@ -5378,14 +5386,14 @@ ibis::bord::column::column(const ibis::bord *tbl, ibis::TYPE_T t,
                     << "Warning -- too many values for bord::column ("
                     << static_cast<array_t<opaque>*>(st)->size()
                     << "), it wraps to " << nr;
-                throw "too many values for bord::column";
+                throw "too many values for bord::column" IBIS_FILE_LINE;
             }
             break;}
         default: {
             LOGGER(ibis::gVerbose >= 0)
                 << "Error -- bord::column::ctor can not handle column ("
                 << cn << ") with type " << ibis::TYPESTRING[(int)t];
-            throw "bord::column unexpected type";}
+            throw "bord::column unexpected type" IBIS_FILE_LINE;}
         }
         if (tbl != 0) {
             mask_.adjustSize(nr, tbl->nRows());
@@ -5481,7 +5489,8 @@ ibis::bord::column::column
     if (rd == 0 || nd == 0 || dims == 0) {
         LOGGER(ibis::gVerbose >= 0)
             << "collis::ctor must have a valid reader and a valid dims array";
-        throw "collis::ctor must have a valid reader and a valid dims array";
+        throw "collis::ctor must have a valid reader and a valid dims array"
+            IBIS_FILE_LINE;
     }
 
     uint64_t nr = *dims;
